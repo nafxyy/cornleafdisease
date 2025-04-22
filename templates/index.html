@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deteksi Penyakit Daun Jagung</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f4f7fa;
+            margin: 0;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 50px;
+            margin-top: 40px;
+            flex-wrap: wrap; /* Membuat elemen membungkus di perangkat kecil */
+        }
+
+        .image-box {
+            width: 100%;
+            max-width: 400px; /* Menentukan lebar maksimum */
+            height: 400px;
+            border: 2px dashed #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            margin-bottom: 20px; /* Menambahkan margin bawah agar elemen tidak terlalu rapat */
+        }
+
+        .image-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* Memastikan gambar tidak terpotong */
+        }
+
+        .form-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        input[type="file"] {
+            margin: 10px 0;
+        }
+
+        input[type="submit"] {
+            padding: 10px 30px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #219150;
+        }
+
+        .explanation {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 16px;
+            color: #34495e;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .image-box {
+                width: 90%; /* Mengurangi lebar gambar agar lebih responsif di perangkat kecil */
+                height: auto;
+            }
+
+            input[type="submit"] {
+                padding: 12px 25px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 20px;
+            }
+
+            .container {
+                gap: 20px;
+                flex-direction: column; /* Menambahkan flex-direction kolom untuk perangkat lebih kecil */
+                align-items: center; /* Menyelaraskan gambar dan penjelasan ke tengah */
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .image-box {
+                width: 100%;
+                height: auto;
+            }
+
+            input[type="submit"] {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+
+            .explanation {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Deteksi Penyakit Daun Jagung</h1>
+
+    <div class="form-container">
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="image" required>
+            <br>
+            <input type="submit" value="Deteksi">
+        </form>
+    </div>
+
+    {% if uploaded_image %}
+    <div class="container">
+        <div>
+            <h3 style="text-align: center;">Gambar Asli</h3>
+            <div class="image-box">
+                <img src="{{ url_for('static', filename='uploads/' + uploaded_image) }}">
+            </div>
+        </div>
+        <div>
+            <h3 style="text-align: center;">Hasil Deteksi</h3>
+            <div class="image-box">
+                <img src="{{ url_for('static', filename='uploads/' + result_image) }}">
+            </div>
+        </div>
+    </div>
+
+    <div class="explanation">
+        <h3>Penjelasan:</h3>
+        <p>
+        {% if 'Blight' in classes_detected %}
+            Hasil deteksi menunjukkan adanya penyakit <strong>Blight</strong>. Blight biasanya ditandai dengan bercak memanjang dan menguning pada daun.
+        {% elif 'Rust' in classes_detected %}
+            Hasil deteksi menunjukkan adanya penyakit <strong>Rust</strong>. Rust menyebabkan bintik-bintik coklat kemerahan kecil pada permukaan daun.
+        {% elif 'GraySpot' in classes_detected %}
+            Hasil deteksi menunjukkan adanya penyakit <strong>Gray Spot</strong>. Ciri khas Gray Spot adalah bercak abu-abu atau kecoklatan berbentuk oval.
+        {% else %}
+            Hasil deteksi belum bisa ditentukan secara pasti. Silakan cek hasil visual deteksi.
+        {% endif %}
+        </p>
+    </div>
+    {% endif %}
+</body>
+</html>
